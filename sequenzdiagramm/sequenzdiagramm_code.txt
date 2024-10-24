@@ -1,0 +1,32 @@
+@startuml
+actor Spieler
+participant Würfel
+participant Regeln
+participant Spielfigur
+participant Spielfeld
+
+Spieler -> Würfel: würfeln()
+Würfel --> Spieler: würfelergebnis = {1-6}
+
+Spieler -> Regeln: zug_möglich(würfelergebnis)
+Regeln --> Spieler: zug_möglich = true/false
+
+alt Zug möglich
+    Spieler -> Spielfigur: figur_bewegen()
+    Spielfigur -> Spielfeld: bewegung(würfelergebnis)
+    Spielfeld --> Spielfigur: neue_position
+
+    alt Gegnerische Figur auf Feld
+        Spielfigur -> Spielfeld: gegner_schlagen()
+        Spielfeld --> Spielfigur: gegnerische_figur_zurück
+    end
+else Zug nicht möglich
+    Spieler -> Spieler: zug_verfällt()
+end
+
+alt Spieler würfelt eine 6
+    Spieler -> Spieler: erneut_würfeln()
+end
+
+Spieler -> Spieler: zug_übergeben()
+@enduml
